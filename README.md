@@ -73,3 +73,86 @@ Things needed to follow along:
   ```
 
   If you don't have it installed, you can run `brew install helm`.
+
+## 
+
+1. ``` bash
+   minikube start
+   ```
+
+1. ``` bash
+   helm repo add stable https://charts.helm.sh/stable
+   helm repo add datadog https://helm.datadoghq.com
+   ```
+
+1. ``` bash
+   helm repo update
+   ```
+
+1. ``` bash
+   curl https://raw.githubusercontent.com/DataDog/helm-charts/master/charts/datadog/values.yaml > values.yaml
+   ```
+
+1. ``` bash
+   helm install <RELEASE_NAME> -f values.yaml --set datadog.apiKey=<YOUR_API_KEY> datadog/datadog --set targetSystem=linux
+   ```
+
+1. ``` bash
+   kubectl get pods
+   ```
+
+1. ``` bash
+   kubectl exec <AGENT_POD_NAME> -- agent status
+   ```
+
+1. ``` bash
+   helm upgrade <RELEASE_NAME> -f values.yaml --set datadog.apiKey=<YOUR_API_KEY> datadog/datadog -- set targetSystem=linux
+   ```
+
+1. ``` yaml
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: redis
+     labels:
+       name: redis
+   spec:
+     containers:
+       - name: redis
+         image: redis
+         ports:
+           - containerPort: 6379
+   ```
+  
+1. ``` yaml
+   datadog:
+     ...
+     env:
+       - name: DD_IGNORE_AUTOCONF
+         value: "redisdb"
+   ```
+
+1. ``` yaml
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: redis
+     annotations:
+       ad.datadoghq.com/redis.check_names: '["redisdb"]'
+       ad.datadoghq.com/redis.init_configs: '[{}]'
+       ad.datadoghq.com/redis.instances: |
+         [
+           {
+             "host": "%%host%%",
+             "port":"6379"
+           }
+         ]      
+     labels:
+       name: redis
+   spec:
+     containers:
+       - name: redis
+         image: redis
+         ports:
+           - containerPort: 6379
+   ```
