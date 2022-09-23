@@ -6,6 +6,6 @@ This is a simple workshop for learning about the different way you can go about 
 
 - [Prerequisites](./docs/pre.md)
 - [Tools](./docs/tools.md)
-- [Creating a Kubernetes cluster on your machine](create-cluster.md)
+- [Creating a Kubernetes cluster on your machine](docs/create-cluster.md)
 - [Deploying the Agent](docs/deploy-agent.md)
 - [Configuring an Integration](docs/integration.md)
